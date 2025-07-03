@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +23,7 @@ import com.marks.foodiesdemo.ui.feature.category_details.FoodCategoryDetailsView
 import com.marks.foodiesdemo.ui.theme.FoodiesDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.receiveAsFlow
+
 // Single Activity per app
 @AndroidEntryPoint
 class EntryPointActivity : ComponentActivity() {
