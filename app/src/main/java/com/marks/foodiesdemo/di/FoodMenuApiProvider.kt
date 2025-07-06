@@ -19,6 +19,14 @@ import javax.inject.Singleton
  * 总结：Retrofit 负责“怎么用”，OkHttp 负责“怎么连”，两者配合让网络请求更强大和灵活
  */
 
+
+/**
+ * `@InstallIn(SingletonComponent::class)` 是
+ * Hilt（Dagger 的依赖注入库）中的注解，表示该 `Module` 中提供的依赖会被安装到 `SingletonComponent` 作用域中。
+ * 这意味着用 `@Provides` 提供的对象在整个应用生命周期内只会有一个实例（单例），
+ * 并且可以在全局范围内被注入和复用。
+ */
+
 @InstallIn(SingletonComponent::class)
 @Module
 class FoodMenuApiProvider {
