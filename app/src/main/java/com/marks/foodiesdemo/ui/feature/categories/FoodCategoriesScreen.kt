@@ -37,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,6 +58,7 @@ import com.marks.foodiesdemo.noRippleClickable
 import com.marks.foodiesdemo.ui.theme.FoodiesDemoTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @ExperimentalCoilApi
 @Composable
@@ -66,24 +68,29 @@ fun FoodCategoriesScreen(
     onNavigationRequested: (itemId: String) -> Unit
 ) {
     val scaffoldState:SnackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     // Listen for side effects from the VM
     LaunchedEffect(effectFlow) {
+        // effectFlow?.onEach不是挂起函数，所以不能直接在这里使用 scaffoldState.showSnackbar
         effectFlow?.onEach { effect ->
-            if (effect is FoodCategoriesContract.Effect.DataWasLoaded)
-                scaffoldState.showSnackbar(
-                    message = "Food categories are loaded.",
-                )
+            if (effect is FoodCategoriesContract.Effect.DataWasLoaded) {
+                scope.launch {
+                    scaffoldState.showSnackbar(
+                        message = "Food categories are loaded.",
+                    )
+                }
+            }
         }?.collect{}
     }
+
     Scaffold(
-        snackbarHost = { SnackbarHost(scaffoldState) },
+        snackbarHost = { SnackbarHost(hostState = scaffoldState) },
         topBar = {
             CategoriesAppBar()
         }
-    ) {it->
-        println("$it")
-        Box {
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
             FoodCategoriesList(foodItems = state.categories) { itemId ->
                 onNavigationRequested(itemId)
             }
@@ -105,7 +112,7 @@ private fun CategoriesAppBar() {
                 contentDescription = "Action icon"
             )
         },
-        title = { Text(stringResource(R.string.app_name)) },
+        title = { Text(stringResource(R.string.app_name)) }
     )
 }
 
@@ -192,7 +199,7 @@ fun FoodItemDetails(
         Text(
             text = item?.name ?: "",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.titleSmall,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )

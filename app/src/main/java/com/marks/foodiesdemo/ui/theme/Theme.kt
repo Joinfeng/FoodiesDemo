@@ -37,6 +37,14 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+
+/**
+ * 相当于设置layout主题：
+ *
+ * FoodiesDemoTheme 相当于在 Compose 里为界面设置主题（类似于传统布局的主题），
+ * 包括颜色、字体等。它通过 MaterialTheme 包裹内容，影响其子 Composable 的配色和样式，
+ * 相当于为整个界面或某部分界面应用统一的主题风格。
+ */
 @Composable
 fun FoodiesDemoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -57,6 +65,7 @@ fun FoodiesDemoTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = Shapes,
         content = content
     )
 }
