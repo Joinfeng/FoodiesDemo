@@ -1,5 +1,6 @@
 package com.marks.foodiesdemo.ui.feature.categories
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,6 +31,13 @@ class FoodCategoriesViewModel @Inject constructor(private val remoteSource: Food
     )
         private set
 
+    /**
+     * effects 是一个 Channel，用于在 ViewModel 和 UI 之间发送一次性事件（如弹窗、导航、Toast 等）。
+     * UNLIMITED 表示这个通道容量无限，不会因满了而挂起发送方。 适合处理只需消费一次的副作用事件，避免因配置变化丢失或重复。
+     *
+     * 可以在 UI 层（如 Compose 的 Composable 或 Fragment）中使用协程收集 Channel 里的事件。
+     * 常见做法是在 LaunchedEffect 或 lifecycleScope 中用 receiveAsFlow().collect 监听：
+     */
     var effects = Channel<FoodCategoriesContract.Effect>(UNLIMITED)
         private set
 
@@ -40,6 +48,7 @@ class FoodCategoriesViewModel @Inject constructor(private val remoteSource: Food
     private suspend fun getFoodCategories() {
         val categories = remoteSource.getFoodCategories()
         viewModelScope.launch {
+            Log.i("TAG", "FoodCategoriesScreen----333333333333333333-------------: ")
             state = state.copy(categories = categories, isLoading = false)
             effects.send(FoodCategoriesContract.Effect.DataWasLoaded)
         }

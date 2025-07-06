@@ -1,5 +1,6 @@
 package com.marks.foodiesdemo.ui.feature.categories
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -63,19 +64,29 @@ import kotlinx.coroutines.launch
 @ExperimentalCoilApi
 @Composable
 fun FoodCategoriesScreen(
-    state: FoodCategoriesContract.State,
+    state: FoodCategoriesContract.State, //state的改变会带动compose的重组（更新一次）
     effectFlow: Flow<FoodCategoriesContract.Effect>?,
     onNavigationRequested: (itemId: String) -> Unit
 ) {
     val scaffoldState:SnackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    /**
+     * LaunchedEffect 是 Jetpack Compose 中的一个组合函数，
+     * 用于在组合（Compose）时启动一个协程，
+     * 并在指定的 key 发生变化时重新执行其代码块。
+     * 常用于执行副作用操作（如网络请求、监听 Flow、发送事件等），
+     * 并能自动管理协程的生命周期，避免内存泄漏。
+     */
+    Log.i("TAG", "FoodCategoriesScreen----1111111111111111-------------: ")
     // Listen for side effects from the VM
     LaunchedEffect(effectFlow) {
+        Log.i("TAG", "FoodCategoriesScreen------------2222222222222222222222-------------: ")
         // effectFlow?.onEach不是挂起函数，所以不能直接在这里使用 scaffoldState.showSnackbar
         effectFlow?.onEach { effect ->
             if (effect is FoodCategoriesContract.Effect.DataWasLoaded) {
                 scope.launch {
+                    Log.i("TAG", "FoodCategoriesScreen------------4444444444444444444444-------------: ")
                     scaffoldState.showSnackbar(
                         message = "Food categories are loaded.",
                     )
