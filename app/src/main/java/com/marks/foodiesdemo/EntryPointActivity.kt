@@ -73,6 +73,11 @@ private fun FoodCategoriesDestination(navController: NavHostController) {
 @Composable
 private fun FoodApp() {
     val navController = rememberNavController()
+    /**
+     * 只有在同一个 `NavHost` 下声明的 `composable` 才能通过该 `NavController` 直接跳转。
+     * 如果 `composable` 分别属于不同的 `NavHost`，它们之间不能直接通过 `NavController.navigate()` 跳转，除非你切换 `NavHost` 或用其他方式通信。
+     * 一般推荐将相关页面放在同一个 `NavHost` 下，便于统一管理导航逻辑。
+     */
     NavHost(navController, startDestination = NavigationKeys.Route.FOOD_CATEGORIES_LIST) {
         composable(route = NavigationKeys.Route.FOOD_CATEGORIES_LIST) {
             FoodCategoriesDestination(navController)
